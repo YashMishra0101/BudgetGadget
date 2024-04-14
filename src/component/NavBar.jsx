@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { FiMenu } from "react-icons/fi";
 import { NavLink } from "react-router-dom";
 import { onAuthStateChanged, signOut } from "firebase/auth";
-import { auth } from "../../src/firebase/FirebaseConfig"
+import { auth } from "../../src/firebase/FirebaseConfig";
+import { toast } from "react-hot-toast";
 
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -38,9 +39,11 @@ const NavBar = () => {
         setIsLoggedIn(false); // Update isLoggedIn state
         localStorage.removeItem("user"); // Remove user data from local storage
         closeMenu(); // Close menu after logout
+        toast.success("Successfully logged out"); // Show success toast
       })
       .catch((error) => {
         console.error("Logout failed:", error);
+        toast.error("Logout failed. Please try again."); // Show error toast
       });
   };
 
