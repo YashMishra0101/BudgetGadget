@@ -130,7 +130,7 @@ const Login = () => {
           </div>
         </div>
       </div>
-      <div className="md:-mt-20 -mt-10">
+      <div className="md:-mt-20 -mt-[20rem]">
         <Footer />
       </div>
     </div>
