@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "../../firebase/FirebaseConfig";
-import { collection, doc, setDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import Footer from "../../component/Footer";
 import toast from "react-hot-toast";
 
@@ -22,32 +22,22 @@ const SignUp = () => {
     e.preventDefault();
     if (password === confirmPassword) {
       try {
-        // Create user with email and password
         const userCredential = await createUserWithEmailAndPassword(
           auth,
           email,
           password
         );
-
-        // Get the user's unique ID
         const userUID = userCredential.user.uid;
-
-        // Extract the user's unique ID based on email
-        const uniqueID = email.split("@")[0]; // Using email prefix as the unique ID
-
-        // Store user information in Firebase Authentication
+        const uniqueID = email.split("@")[0];
         await setDoc(doc(db, "users", userUID), {
-          // Storing user data in Firestore
           name: name,
           email: email,
           uniqueID: uniqueID,
         });
-
         toast.success("Signup Successful");
         navigate("/");
       } catch (error) {
         toast.error("Already Registered");
-        console.error(`Signup failed: ${error.message}`);
       }
     } else {
       toast.error("Password not matched");
@@ -183,7 +173,7 @@ const SignUp = () => {
           </div>
         </div>
       </div>
-      <div className="mt-24">
+      <div className="md:mt-24 mt-20">
         <Footer />
       </div>
     </div>

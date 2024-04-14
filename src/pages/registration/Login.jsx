@@ -5,36 +5,39 @@ import { auth } from "../../firebase/FirebaseConfig";
 import toast from "react-hot-toast";
 import Footer from "../../component/Footer";
 
-const Adminlogin = () => {
+const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showpassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const navigation = useNavigate();
 
   const handleCheckboxChange = () => {
-    setShowPassword(!showpassword);
+    setShowPassword(!showPassword);
   };
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    try {
-      const user = await signInWithEmailAndPassword(auth, email, password);
-      const users = localStorage.setItem("user", JSON.stringify(user));
-      toast.success("Login Successful");
-      navigation("/home");
-      setEmail("");
-      setPassword("");
-      console.log("In Login ,Email:", email);
-      console.log("In Login ,Password:", password);
-      window.location.reload();
-    } catch (error) {
-      toast.error("Invalid email or password");
-      console.log(`Login failed: ${error.message}`);
+  const handleLogin = async () => {
+    if (email && password) {
+      try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        localStorage.setItem("user", JSON.stringify(userCredential.user));
+        toast.success("Login Successful");
+        navigation("/home");
+        setEmail("");
+        setPassword("");
+      } catch (error) {
+        toast.error("Invalid email or password");
+        console.error("Login failed:", error.message);
+      }
     }
   };
 
   const resetHandler = () => {
     navigation("/forgotpassword");
+  };
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault(); // Prevent form submission
+    handleLogin(); // Call handleLogin when form is submitted
   };
 
   return (
@@ -50,7 +53,7 @@ const Adminlogin = () => {
               <h1 className="md:text-center font-bold text-2xl text-white">
                 User Login
               </h1>
-              <form onSubmit={handleLogin} className="space-y-4 md:space-y-6">
+              <form onSubmit={handleFormSubmit} className="space-y-4 md:space-y-6">
                 <div>
                   <label
                     htmlFor="email"
@@ -66,6 +69,7 @@ const Adminlogin = () => {
                     className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="name@gmail.com"
                     required
+                    value={email}
                     onChange={(e) => setEmail(e.target.value)}
                   />
                 </div>
@@ -77,13 +81,14 @@ const Adminlogin = () => {
                     Password
                   </label>
                   <input
-                    type={showpassword ? "text" : "password"}
+                    type={showPassword ? "text" : "password"}
                     name="password"
                     id="password"
                     autoComplete="current-password"
                     placeholder="••••••••"
                     className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     required
+                    value={password}
                     onChange={(e) => setPassword(e.target.value)}
                   />
                 </div>
@@ -93,6 +98,7 @@ const Adminlogin = () => {
                       <input
                         id="showpassword"
                         type="checkbox"
+                        checked={showPassword}
                         onChange={handleCheckboxChange}
                         className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800 cursor-pointer"
                       />
@@ -124,11 +130,11 @@ const Adminlogin = () => {
           </div>
         </div>
       </div>
-      <div className="-mt-20">
+      <div className="md:-mt-20 -mt-10">
         <Footer />
       </div>
     </div>
   );
 };
 
-export default Adminlogin;
+export default Login;

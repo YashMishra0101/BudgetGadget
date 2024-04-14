@@ -1,5 +1,5 @@
 import React from "react";
-import Aboutimage from "../assets/Aboutus.png";
+import AboutImage from "../assets/Aboutus.png";
 import Footer from "../component/Footer";
 
 const AboutUs = () => {
@@ -15,7 +15,7 @@ const AboutUs = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="flex items-center justify-center">
             <img
-              src={Aboutimage}
+              src={AboutImage}
               alt="About Us"
               className="w-full md:h-[25rem] max-w-lg mx-auto rounded-md"
             />
@@ -25,27 +25,20 @@ const AboutUs = () => {
               Our Mission
             </h3>
             <p className="text-gray-700 dark:text-gray-300 mb-6">
-              In our website, when searching for a product name, we can compare
-              it from around 100 different websites for its price, rating,
-              reviews, and much more. Images of each product are also displayed.
-              Moreover, upon clicking on any product in the rectangular card,
-              users can be redirected to the original website.
+              Our mission is to provide a comprehensive platform where users can compare prices, ratings, reviews, and more from various websites when searching for a product. Users can also view images of each product and be redirected to the original website upon clicking on any product card.
             </p>
             <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">
               Our Vision
             </h3>
             <p className="text-gray-700 dark:text-gray-300 mb-6">
-              In our website, our vision is to provide users with a
-              comprehensive platform to compare prices and other details of
-              products from various websites, ensuring they make informed
-              purchasing decisions.
+              Our vision is to empower users with a comprehensive platform for comparing prices and other product details from various websites, enabling them to make informed purchasing decisions.
             </p>
             <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">
               Our Values
             </h3>
             <ul className="list-disc list-inside text-gray-700 dark:text-gray-300">
               <li>User satisfaction & convenience</li>
-              <li>Transparency & accuracy in product info</li>
+              <li>Transparency & accuracy in product information</li>
               <li>Continuous improvement for user experience</li>
               <li>Dedication to reliable & efficient services</li>
             </ul>

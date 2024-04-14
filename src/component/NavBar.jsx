@@ -1,21 +1,31 @@
 import React, { useState, useEffect } from "react";
 import { FiMenu } from "react-icons/fi";
 import { NavLink } from "react-router-dom";
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import { auth } from "../../src/firebase/FirebaseConfig"
 
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    // Check local storage for user login status
-    const userLoggedIn = localStorage.getItem("user");
-    if (userLoggedIn) {
-      setIsLoggedIn(true);
-    }
+    // Firebase authentication status change listener
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setIsLoggedIn(true); // User is signed in
+        localStorage.setItem("user", JSON.stringify(user)); // Save user data to local storage
+      } else {
+        setIsLoggedIn(false); // User is signed out
+        localStorage.removeItem("user"); // Remove user data from local storage
+      }
+    });
+
+    return () => unsubscribe(); // Cleanup function to unsubscribe from listener
+
   }, []);
 
   const toggleMenu = () => {
-    setIsOpen(!isOpen);
+    setIsOpen(prevState => !prevState); // Using functional update to toggle isOpen
   };
 
   const closeMenu = () => {
@@ -23,14 +33,28 @@ const NavBar = () => {
   };
 
   const logout = () => {
-    // Remove user from local storage and update isLoggedIn state
-    localStorage.removeItem("user");
-    setIsLoggedIn(false);
+    signOut(auth)
+      .then(() => {
+        setIsLoggedIn(false); // Update isLoggedIn state
+        localStorage.removeItem("user"); // Remove user data from local storage
+        closeMenu(); // Close menu after logout
+      })
+      .catch((error) => {
+        console.error("Logout failed:", error);
+      });
   };
 
   const handleNavLinkClick = () => {
     closeMenu();
   };
+
+  const navLinks = [
+    { to: "/home", text: "Home" },
+    { to: "/pricecomparison", text: "Price Comparison" },
+    { to: "/help", text: "Help" },
+    { to: "/about", text: "About" }
+  ];
+
 
   return (
     <nav className="border-gray-200 bg-gray-900 select-none z-30">
@@ -46,36 +70,24 @@ const NavBar = () => {
           </span>
         </span>
         <div className="hidden text-base font-sans md:flex md:flex-row md:space-x-8 rtl:space-x-reverse">
-          <NavLink
-            to="/home"
-            className="py-2 px-3 hover:bg-transparent border-b-2 border-transparent text-white hover:text-blue-500"
-            onClick={handleNavLinkClick}
-          >
-            Home
-          </NavLink>
-          <NavLink
-            to="/pricecomparison"
-            className="py-2 px-3 hover:bg-transparent border-b-2 border-transparent text-white hover:text-blue-500"
-            onClick={handleNavLinkClick}
-          >
-            Price Comparison
-          </NavLink>
-
-          {isLoggedIn && (
-            <>
-              <NavLink
-                to="/"
-                className="py-2 px-3 hover:bg-transparent border-b-2 border-transparent text-white hover:text-blue-500"
-                onClick={() => {
-                  handleNavLinkClick();
-                  logout();
-                }}
-              >
-                Logout
-              </NavLink>
-            </>
-          )}
-          {!isLoggedIn && (
+          {navLinks.map(({ to, text }) => (
+            <NavLink
+              key={to}
+              to={to}
+              className="py-2 px-3 hover:bg-transparent border-b-2 border-transparent text-white hover:text-blue-500"
+              onClick={handleNavLinkClick}
+            >
+              {text}
+            </NavLink>
+          ))}
+          {isLoggedIn ? (
+            <button
+              className="py-2 px-3 hover:bg-transparent border-b-2 border-transparent text-white hover:text-blue-500"
+              onClick={logout}
+            >
+              Logout
+            </button>
+          ) : (
             <>
               <NavLink
                 to="/"
@@ -93,22 +105,6 @@ const NavBar = () => {
               </NavLink>
             </>
           )}
-
-          <NavLink
-            to="/help"
-            className="py-2 px-3 hover:bg-transparent border-b-2 border-transparent text-white hover:text-blue-500"
-            onClick={handleNavLinkClick}
-          >
-            Help
-          </NavLink>
-
-          <NavLink
-            to="/about"
-            className="py-2 px-3 hover:bg-transparent border-b-2 border-transparent text-white hover:text-blue-500"
-            onClick={handleNavLinkClick}
-          >
-            About
-          </NavLink>
         </div>
         <button
           type="button"
@@ -123,38 +119,27 @@ const NavBar = () => {
           } w-full h-[15rem] md:hidden mt-4 border rounded-md font-medium text-base md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700`}
           id="navbar-default"
         >
-          <NavLink
-            to="/"
-            className="block py-2 px-3 hover:bg-transparent md:border-0 md:p-0 text-white hover:text-blue-500"
-            onClick={closeMenu}
-          >
-            Home
-          </NavLink>
-          <NavLink
-            to="/pricecomparison"
-            className="block py-2 px-3 hover:bg-transparent md:border-0 md:p-0 text-white hover:text-blue-500"
-            onClick={closeMenu}
-          >
-            Price Comparison
-          </NavLink>
-          {isLoggedIn && (
+          {navLinks.map(({ to, text }) => (
+            <NavLink
+              key={to}
+              to={to}
+              className="block py-2 px-3 hover:bg-transparent md:border-0 md:p-0 text-white hover:text-blue-500"
+              onClick={closeMenu}
+            >
+              {text}
+            </NavLink>
+          ))}
+          {isLoggedIn ? (
+            <button
+              className="block py-2 px-3 hover:bg-transparent md:border-0 md:p-0 text-white hover:text-blue-500"
+              onClick={logout}
+            >
+              Logout
+            </button>
+          ) : (
             <>
               <NavLink
                 to="/"
-                className="block py-2 px-3 hover:bg-transparent md:border-0 md:p-0 text-white hover:text-blue-500"
-                onClick={() => {
-                  closeMenu();
-                  logout();
-                }}
-              >
-                Logout
-              </NavLink>
-            </>
-          )}
-          {!isLoggedIn && (
-            <>
-              <NavLink
-                to="/login"
                 className="block py-2 px-3 hover:bg-transparent md:border-0 md:p-0 text-white hover:text-blue-500"
                 onClick={closeMenu}
               >
@@ -169,20 +154,6 @@ const NavBar = () => {
               </NavLink>
             </>
           )}
-
-          <div className="py-2 px-3 hover:bg-transparent border-b-2 border-transparent text-white hover:text-blue-500">
-            <NavLink to="/help" onClick={closeMenu}>
-              Help
-            </NavLink>
-          </div>
-
-          <NavLink
-            to="/about"
-            className="py-2 px-3 hover:bg-transparent border-b-2 border-transparent text-white hover:text-blue-500"
-            onClick={closeMenu}
-          >
-            About
-          </NavLink>
         </div>
       </div>
     </nav>
