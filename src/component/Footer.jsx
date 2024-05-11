@@ -4,7 +4,7 @@ function Footer() {
   return (
     <div>
       {/* Footer starts */}
-      <footer className="bg-gray-800 text-white py-4">
+      <footer className=" text-white py-4">
         <div className="container mx-auto text-center">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 px-6 py-8">
             <div>
@@ -27,8 +27,8 @@ function Footer() {
               </ul>
             </div>
             <div>
-              <h3 className="text-lg font-semibold">Help Center</h3>
-              <ul className="mt-4 cursor-pointer">
+              <h3 className="text-lg font-semibold text-white">Help Center</h3>
+              <ul className="mt-4 cursor-pointer text-white">
                 <li>
                   <span>Instagram</span>
                 </li>
@@ -41,8 +41,8 @@ function Footer() {
               </ul>
             </div>
             <div>
-              <h3 className="text-lg font-semibold">Legal</h3>
-              <ul className="mt-4">
+              <h3 className="text-lg font-semibold text-white">Legal</h3>
+              <ul className="mt-4 text-white">
                 <li>
                   <a href="#">Privacy Policy</a>
                 </li>
@@ -55,10 +55,10 @@ function Footer() {
               </ul>
             </div>
             <div>
-              <h3 className="text-lg font-semibold">Download</h3>
-              <ul className="mt-4">
+              <h3 className="text-lg font-semibold text-white">Download</h3>
+              <ul className="mt-4 text-white">
                 <li>
-                  <a href="#">iOS</a>
+                  <a href="#" className="text-white">iOS</a>
                 </li>
                 <li>
                   <a href="#">Android</a>
